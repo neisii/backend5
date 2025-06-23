@@ -1,0 +1,24 @@
+**/backendProject@tmp/
+**/backendProject/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### VS Code ###
+.vscode/
+
+
+### docker ###
+**/Data/volumes/
+volumes/
+**/CICD/volumes/
+*.yml
+*.txt
+**/nginx/*.conf
+**/Data/.env
