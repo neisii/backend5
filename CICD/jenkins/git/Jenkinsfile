@@ -3,16 +3,17 @@ pipeline {
 
   environment {
     PROJECT_DIR = '/var/jenkins_home/workspace/backend5/backendProject'       // 백앤드 서버 프로젝트 폴더
-    COMPOSE_DIR = '/var/jenkins_home/workspace/backend5'                     //  프로젝트 루트 폴더에서 docker-compose.yml 실행
-    IMAGE_NAME = 'backend'
+    //COMPOSE_DIR = '/var/jenkins_home/workspace/backend5'                     //  프로젝트 루트 폴더에서 docker-compose.yml 실행
+    //IMAGE_NAME = 'backend'
+    COMPOSE_FILE = 'docker-compose.backend.yml'
   }
 
   stages {
 
       stage('Cleanup Containers') {
         steps {
-            dir("${COMPOSE_DIR}") {
-              sh 'docker-compose down'
+            dir("${PROJECT_DIR}") {
+              sh 'docker compose -f ${COMPOSE_FILE} down'
             }
          }
       }
@@ -28,24 +29,32 @@ pipeline {
     }
 
 // 도커 이미지화
-    stage('Docker Build') {
+    // stage('Docker Build') {
+    //   steps {
+    //     dir("${PROJECT_DIR}") {
+    //       sh "docker build -t ${IMAGE_NAME} ."
+    //     }
+    //   }
+    // }
+
+    stage('Compose Up') {
       steps {
         dir("${PROJECT_DIR}") {
-          sh "docker build -t ${IMAGE_NAME} ."
+            sh "docker compose -f ${COMPOSE_FILE} up -d --build"
         }
       }
     }
 
-// nginx 
-    stage('Compose Up') {
-      steps {
-        dir("${COMPOSE_DIR}") {
-          sh 'pwd'
-          sh 'ls -l ./nginx/nginx.conf'
-          sh 'docker-compose up -d --build'
-        }
-      }
-    }
+// nginx
+    // stage('Compose Up') {
+    //   steps {
+    //     dir("${COMPOSE_DIR}") {
+    //       sh 'pwd'
+    //       sh 'ls -l ./nginx/nginx.conf'
+    //       sh 'docker-compose up -d --build'
+    //     }
+    //   }
+    // }
 
     stage('Restart Nginx') {
       steps {
